@@ -1,5 +1,12 @@
-body {
+.body-login {
     padding-top: 90px;
+}
+tr {
+  color: red;
+}
+
+.head-nav {
+      padding-top: inherit;
 }
 .panel-login {
     border-color: #ccc;

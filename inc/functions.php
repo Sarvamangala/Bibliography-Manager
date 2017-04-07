@@ -42,6 +42,25 @@ function logIn($username, $password) {
 	return $result;
 
 }
+// changing password
+function changePassword($current_password, $new_password) {
+	session_start();
+	global $db;
+	$q = $db -> prepare("SELECT u.id, u.Password FROM User u WHERE u.username = ?");
+	$q -> bindParam(1, $username);
+	$q -> execute();
+	$result = $q -> fetch(PDO::FETCH_ASSOC);
+	//alert('here');
+
+	if(validate($password, $result['Password'])) {
+		$_SESSION['uname'] = $username;
+		$_SESSION['logged_in'] = true;
+		$_SESSION['user_id'] = $result['id'];
+		return true;
+	}
+	return $result;
+
+}
 
 function validate($plain, $hash) {
 
@@ -55,4 +74,5 @@ function logout() {
 	$_SESSION = array();
 	session_destroy();
 	//window.location.replace("login.php");
+	//document.location = "login.php";
 }

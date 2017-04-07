@@ -46,20 +46,34 @@ function logIn($username, $password) {
 function changePassword($current_password, $new_password) {
 	session_start();
 	global $db;
-	$q = $db -> prepare("SELECT u.id, u.Password FROM User u WHERE u.username = ?");
-	$q -> bindParam(1, $username);
+
+	/*$q = $db -> prepare("SELECT u.id, u.Password FROM User u WHERE u.username = ?");
+	$q -> bindParam(1, $_SESSION['uname']);
 	$q -> execute();
 	$result = $q -> fetch(PDO::FETCH_ASSOC);
 	//alert('here');
+	echo $result['Password']." ";
+	$thisHash =  hash('md5', $current_password);
+	echo $thisHash;*/
+	/*if(hash('md5', $current_password), $result['Password']) {
+		echo "herer !";
+	}*/
 
-	if(validate($password, $result['Password'])) {
-		$_SESSION['uname'] = $username;
-		$_SESSION['logged_in'] = true;
-		$_SESSION['user_id'] = $result['id'];
-		return true;
+
+	$query = $db -> prepare("UPDATE User SET Password = :newPassword WHERE id = :id AND Password = :currentPassword");
+	$query->bindParam(':newPassword', hash('md5', $new_password));
+	$query->bindParam(':id', $_SESSION['user_id']);
+    $query->bindParam(':currentPassword', hash('md5', $current_password));
+    $query->execute();
+
+	$count = $query->rowCount();
+
+	if($count ==0){
+    return false;
 	}
-	return $result;
-
+	else{
+    return true;
+	}
 }
 
 function validate($plain, $hash) {

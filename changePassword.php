@@ -27,37 +27,29 @@ include("inc/header.php");
      
   </div>  
 </nav>
+</br></br></br></br></br></br>
+<div class = "container ">
 
-<div class = "container">
-
-  <div class="navbar-inverse">
-      <div class="navbar-collapse collapse">
-        <div class="btn-group pull-right ">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-labelledby="dropdownMenuButton">
-            Folder
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">All</a></br>
-            <a class="dropdown-item" href="#">Trash</a></br>
-            <a class="dropdown-item" href="#">Unfiled</a></br>
-          </div>
-        </div>
-      </div>
-  </div>
-  <div></br></br></br>
+  
+  <div class="col-sm-3 col-md-3 col-lg-3"></br></br></br>
   </div>
 
-  <div class="panel panel-login ">
+  <div class="panel panel-login col-sm-6 col-md-6 col-lg-6">
         <form class="form-horizontal" id="changePassword-form" name = "changePassword-form" action="#" method="post" role="form">
         <fieldset>
 
         <!-- Form Name -->
-        <h1>Change Password</h1>
+        <div>
 
+        <div class="col-sm-2 col-md-2 col-lg-2">
+        
+        </div>
+        <h1 class="col-sm-10 col-md-10 col-lg-10">Change Password</h1>
+        </div>
         <!-- Password input-->
         <div class="form-group">
           <label class="col-md-4 control-label" for="piCurrPass">Type your current password</label>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <input id="CurrPass" name="CurrPass" type="password" placeholder="" class="form-control input-md" required="">
             
           </div>
@@ -66,7 +58,7 @@ include("inc/header.php");
         <!-- Password input-->
         <div class="form-group">
           <label class="col-md-4 control-label" for="piNewPass">Type your new password</label>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <input id="NewPass" name="NewPass" type="password" placeholder="" class="form-control input-md" required="">
             
           </div>
@@ -75,7 +67,7 @@ include("inc/header.php");
         <!-- Password input-->
         <div class="form-group">
           <label class="col-md-4 control-label" for="piNewPassRepeat">Retype your new password</label>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <input id="NewPassRepeat" name="NewPassRepeat" type="password" placeholder="" class="form-control input-md" required="">
             
           </div>
@@ -86,7 +78,7 @@ include("inc/header.php");
           <label class="col-md-4 control-label" for="bCancel"></label>
           <div class="col-md-4 text-center">
 
-            <input type="submit" id="submit" name="submit" class="btn btn-success" value="Save" onClick="return formvalidationReset();">
+            <input type="submit" id="submit" name="submit" class="btn btn-success" value="Save" >
           </div>
         </div>
 
@@ -113,30 +105,70 @@ include("inc/header.php");
 
 <script type="text/javascript">
     //---------------------------------------------change password request
-      function formvalidationReset() {
-       $("#changePassword-form").validate({
-       rules: {
-       CurrPass: "required",
-              NewPass: "required",
-              NewPassRepeat: {
-                required: true,
-                equalTo: "#password"
-              }
-      },
-      messages: {
-              CurrPass: "Please enter your current passowrd.",
-              NewPass: "Please enter your new password.",
-              NewPassRepeat: {
-                required: "Please provide your new password again.",
-                equalTo: "Your passwords & confirm password does not match.",
-              }
-            },
-      
+    
+
+  $(document).ready(function () {
+
+     $('.submit').click(function(){
+        validateForm();   
+    });
+
+  function validateForm(){
+
+
+    var currpassword = $('#CurrPass').val();
+    var newpassword = $('#NewPass').val();
+    var renewpassword = $('#NewPassRepeat').val();
+    
+
+    var inputVal = new Array(currpassword, newpassword, renewpassword);
+
+    var inputMessage = new Array("name", "company", "email address", "telephone number", "message");
+
+     
+
+        if(inputVal[0] == ""){
+            $('#nameLabel').after('<span class="error"> Please enter your ' + inputMessage[0] + '</span>');
+        } 
+       
+                if(inputVal[1] == ""){
+            $('#companyLabel').after('<span class="error"> Please enter your ' + inputMessage[1] + '</span>');
+        }
+
+        if(inputVal[2] != inputVal[1]){
+            $('#emailLabel').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
+            console.log("msg");
+        } 
+        
+  }
+});   
+
+  $('#changePassword-form').submit( function (e){
+
+      e.preventDefault();       
+        $info = $(this).serializeArray();
+
+      var request = $.ajax({
+        url: "ajax/attemptChangePassword.php",
+        method: "POST",
+        data: $info,
+        dataType: "html"
       });
-    } 
+       
+      request.done(function( msg ) {
+        //console.log(msg);
+        if(msg == 'true') {
+          alert('Your password has been successfully changed. Cheers!');
+          window.location.href = "index.php";
+        } else if(msg == 'false') {
+          alert('The details you have entered are incorrect!');
+        }
+      });
 
-      
-
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+      });
 
     </script>
 

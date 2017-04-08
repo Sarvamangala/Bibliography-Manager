@@ -12,6 +12,11 @@ if(isset($_POST['logout'])) {
     ob_end_flush();
     die();
 }
+
+if(isLoggedIn()) {
+  create_trash($_SESSION['user_id']);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +52,7 @@ body {font-family: "Raleway", sans-serif}
     left: 0;
     background-size: cover;
     
-    background-image: url('images/bike.jpg');
+    background-image: url('images/bg.jpg');
     
   }
 </style>

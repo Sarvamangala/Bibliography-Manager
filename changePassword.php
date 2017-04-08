@@ -14,9 +14,7 @@ include("inc/header.php");
       if (isset($_SESSION["uname"])) {
       echo $_SESSION['uname'];   
       }
-      ?>
-
-      </a>
+      ?></a>
     </div>
     <div class="col-sm-1 col-md-1 col-lg-1">
       <form id="logout-form" class="navbar-form navbar-right" role="form" method="POST">
@@ -24,7 +22,6 @@ include("inc/header.php");
       <button type="submit" id="logout" class="btn btn-danger">Sign Out</button> 
       </form>
     </div>
-     
   </div>  
 </nav>
 </br></br></br></br></br></br>

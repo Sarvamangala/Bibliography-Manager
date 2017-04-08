@@ -27,20 +27,24 @@ include("inc/header.php");
 
 <div class = "container">
 
-  <div class="navbar-inverse">
+  <div class="bg-warning">
     <div class="navbar-collapse collapse">
       <div class="btn-group pull-right ">
-        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-labelledby="dropdownMenuButton">
-          Folder
-        </button>
+
+        <select id="folders" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-labelledby="dropdownMenuButton">
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">All</a></br>
-          <a class="dropdown-item" href="#">Trash</a></br>
-          <a class="dropdown-item" href="#">Unfiled</a></br>
+        <option class="dropdown-item" value="" default>Select one</option>
+        <option class="dropdown-item" value="all" default>All</option>
+        <option class="dropdown-item" value="trash">trash</option>
+        <option class="dropdown-item" value="unfiled">unfiled</option>
+        </select>
         </div>
+
       </div>
     </div>
-</div>
+
+
+
 
 
     <table class="table table-striped table-hover">
@@ -59,10 +63,21 @@ include("inc/header.php");
     <?php
 
 
-      $q = $db -> prepare("SELECT r.* FROM refs r WHERE r.user_id = ?");
-      $q -> bindParam(1, $_SESSION['user_id']);
-      $q -> execute();
-      $results = $q -> fetchAll(PDO::FETCH_ASSOC);
+      if(isset($_GET['folder']) && $_GET['folder'] != 'all') {
+        $q = $db -> prepare("SELECT r.* FROM refs r INNER JOIN folders f ON r.user_id = f.user_id 
+            WHERE r.user_id = ? AND f.name = ? AND r.user_id = f.user_id AND r.id = f.ref_id");
+
+        $q -> bindParam(1, $_SESSION['user_id']);
+        $q -> bindParam(2, $_GET['folder']);
+        $q -> execute();
+        $results = $q -> fetchAll(PDO::FETCH_ASSOC);
+         } else {
+
+        $q = $db -> prepare("SELECT r.* FROM refs r WHERE r.user_id = ?");
+        $q -> bindParam(1, $_SESSION['user_id']);
+        $q -> execute();
+        $results = $q -> fetchAll(PDO::FETCH_ASSOC);
+        }
 
       foreach($results as $row) { ?>
       <tr>
@@ -77,6 +92,8 @@ include("inc/header.php");
        <?php } ?>
        </tbody>
     </table>
+
+    <button id="modal-button" type="button" class="btn btn-danger btn-info pull-right">Add new</button>
 
     <?php } else { ?>
 
@@ -94,4 +111,13 @@ include("inc/header.php");
 
 </div>
 </body>
+
+<script type="text/javascript">
+    $('#folders').change( function (e) {
+        e.preventDefault();
+        var folder = $(this).val();
+        window.location.href = "index.php?folder="+folder;
+        
+    });
+</script>
   

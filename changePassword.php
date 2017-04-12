@@ -184,8 +184,13 @@ include("inc/header.php");
         }
         if(opt == 'logout') {
 
-          //include php functions
-        window.location.href = "login.php";
+          $.ajax({
+            url: 'ajax/attemptLogout.php',
+            type: 'POST',
+            data: { "logout": "true"},
+            success: function(response) { window.location.href = "login.php"; }
+        });
+        //window.location.href = "login.php";
         }
         
     });

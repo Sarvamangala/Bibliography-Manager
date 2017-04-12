@@ -36,6 +36,7 @@ function logIn($username, $password) {
 	if(validate($password, $result['Password'])) {
 		$_SESSION['uname'] = $username;
 		$_SESSION['logged_in'] = true;
+		$_SESSION['logout'] = false;
 		$_SESSION['user_id'] = $result['id'];
 		return true;
 	}
@@ -85,20 +86,46 @@ function validate($plain, $hash) {
 }
 
 function logout() {
+	session_start();
 	$_SESSION['logged_in'] = false;
 
 	$_SESSION = array();
 	session_destroy();
 	//window.location.replace("login.php");
 	//document.location = "login.php";
-	ob_start();
-    header('Location: ../login.php');
-    ob_end_flush();
-    die();
+	
+	if(isset($_SESSION['logout']) && !empty($_SESSION['logout'])) {
+   	
 	return true;
+	}
+	return false;
 }
 
+function PopupAdd($title, $author, $dateCreated, $datePublished, $volume, $abstract, $pages) {
 
+	session_start();
+	global $db;
+	$q = $db -> prepare("INSERT INTO refs (title, author, date_added, date_published, volume, pages, user_id, abstract) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+	$q -> bindParam(1, $title);
+	$q -> bindParam(2, $author);
+	$q -> bindParam(3, $dateCreated);
+	$q -> bindParam(4, $datePublished);
+	$q -> bindParam(5, $volume);
+	$q -> bindParam(6, $pages);
+	$q -> bindParam(7, $_SESSION['user_id']);
+	$q -> bindParam(8, $abstract);
+	$q -> execute();
+	//alert($q);
+
+	$count = $q->rowCount();
+
+	if($count ==0){
+    return false;
+	}
+	else{
+    return true;
+	}
+}
 
 function create_trash($user_id) {
 

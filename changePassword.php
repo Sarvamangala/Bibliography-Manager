@@ -109,13 +109,13 @@ include("inc/header.php");
 <script type="text/javascript">
     //---------------------------------------------change password request
     
-
+//not working
   $(document).ready(function () {
 
      $('.submit').click(function(){
         validateForm();   
     });
-
+//not working
   function validateForm(){
 
 
@@ -146,6 +146,8 @@ include("inc/header.php");
   }
 });   
 
+
+
   $('#changePassword-form').submit( function (e){
 
       e.preventDefault();       
@@ -171,7 +173,8 @@ include("inc/header.php");
       request.fail(function( jqXHR, textStatus ) {
         alert( "Request failed: " + textStatus );
       });
-      });
+
+   });
 
       $('.useracc').click( function (e) {
         e.preventDefault();

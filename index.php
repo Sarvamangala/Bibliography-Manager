@@ -97,6 +97,7 @@ include("inc/header.php");
         <td><?=$row['volume']?></td>
         <td><?=$row['abstract']?></td>
         <td><?=$row['pages']?></td>
+        <td><a href="#" id="Trash" class="dropdown-item folder"><span class="glyphicon glyphicon-trash"></span></a></td>
      </tr>
        <?php } ?>
        </tbody>

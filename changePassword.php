@@ -5,25 +5,31 @@ include("inc/header.php");
 <?php 
 
       if (isset($_SESSION["uname"])) { ?>
+
 <nav class="navbar navbar-inverse bg-primary">
-  <div id="navbar" class="navbar-collapse collapse">
-    <div class="col-sm-11 col-md-11 col-lg-11">
-      <a class="navbar-brand pull-right" href="#"><?php 
+   
+<div class="dropdown navbar-brand pull-right">
+  <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    
+    <?php 
 
       //can eliminate this!
       if (isset($_SESSION["uname"])) {
       echo $_SESSION['uname'];   
       }
-      ?></a>
-    </div>
-    <div class="col-sm-1 col-md-1 col-lg-1">
-      <form id="logout-form" class="navbar-form navbar-right" role="form" method="POST">
-      <input type="hidden" name="logout" value="true">
-      <button type="submit" id="logout" class="btn btn-danger">Sign Out</button> 
-      </form>
-    </div>
-  </div>  
+      ?>
+
+    <!-- Display icon in button -->
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <!-- Unselectable header -->
+    <li><a href="#" id="home" class="dropdown-item useracc">Home</a></li>
+    <li><a href="#" id="logout" class="dropdown-item useracc">Logout</a></li>
+  </ul>
+</div>
 </nav>
+
 </br></br></br></br></br></br>
 <div class = "container ">
 
@@ -166,6 +172,23 @@ include("inc/header.php");
         alert( "Request failed: " + textStatus );
       });
       });
+
+      $('.useracc').click( function (e) {
+        e.preventDefault();
+        var opt = $(this).attr('id');
+        if(opt == 'cPass') {
+        window.location.href = "changePassword.php";
+        }
+        if(opt == 'home') {
+        window.location.href = "index.php";
+        }
+        if(opt == 'logout') {
+
+          //include php functions
+        window.location.href = "login.php";
+        }
+        
+    });
 
     </script>
 

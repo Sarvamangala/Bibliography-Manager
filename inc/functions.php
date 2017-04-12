@@ -91,7 +91,14 @@ function logout() {
 	session_destroy();
 	//window.location.replace("login.php");
 	//document.location = "login.php";
+	ob_start();
+    header('Location: ../login.php');
+    ob_end_flush();
+    die();
+	return true;
 }
+
+
 
 function create_trash($user_id) {
 

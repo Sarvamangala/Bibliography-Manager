@@ -5,13 +5,7 @@ include("inc/connect.php");
 include("inc/functions.php");
 
 
-if(isset($_POST['logout'])) {
-  logout();
-    ob_start();
-    header('Location: login.php');
-    ob_end_flush();
-    die();
-}
+
 
 if(isLoggedIn()) {
   create_trash($_SESSION['user_id']);
@@ -55,6 +49,7 @@ body {font-family: "Raleway", sans-serif}
     background-image: url('images/bg.jpg');
     
   }
+
 </style>
 
 

@@ -43,6 +43,38 @@ function logIn($username, $password) {
 	return $result;
 
 }
+
+function newfolder($folder) {
+	session_start();
+	global $db;
+	$insert = $db -> prepare("INSERT INTO folders (user_id, name) VALUES (?, ?)");
+	$insert -> bindParam(1, $_SESSION['user_id']);
+	$insert -> bindParam(2, $folder);
+	$insert -> execute();
+
+	if($insert) {
+		return true;
+	}
+
+}
+
+function attemptaddRefToFolder($pickfolder, $idarray) {
+	session_start();
+	global $db;
+	foreach ($idarray as &$idref) {
+	$insert = $db -> prepare("INSERT INTO folders (user_id, name, ref_id) VALUES (?, ?, ?)");
+	$insert -> bindParam(1, $_SESSION['user_id']);
+	$insert -> bindParam(2, $pickfolder);
+	$insert -> bindParam(3, $idref);
+	$insert -> execute();
+
+	}
+	if($insert) {
+		return true;
+	}
+
+}
+
 // changing password
 function changePassword($current_password, $new_password) {
 	session_start();

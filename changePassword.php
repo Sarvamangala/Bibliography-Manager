@@ -51,27 +51,27 @@ include("inc/header.php");
         </div>
         <!-- Password input-->
         <div class="form-group">
-          <label class="col-md-4 control-label" for="piCurrPass">Type your current password</label>
+          <label class="col-md-4 control-label" for="piCurrPass">Current Password</label>
           <div class="col-md-6">
-            <input id="CurrPass" name="CurrPass" type="password" placeholder="" class="form-control input-md" required="">
+            <input id="CurrPass" name="CurrPass" type="password" placeholder="" class="form-control input-md" required>
             
           </div>
         </div>
 
         <!-- Password input-->
         <div class="form-group">
-          <label class="col-md-4 control-label" for="piNewPass">Type your new password</label>
+          <label class="col-md-4 control-label" for="piNewPass">New Password</label>
           <div class="col-md-6">
-            <input id="NewPass" name="NewPass" type="password" placeholder="" class="form-control input-md" required="">
+            <input id="NewPass" name="NewPass" type="password" placeholder="" data-rule-notEqualTo="#CurrPass" class="form-control input-md" required>
             
           </div>
         </div>
 
         <!-- Password input-->
         <div class="form-group">
-          <label class="col-md-4 control-label" for="piNewPassRepeat">Retype your new password</label>
+          <label class="col-md-4 control-label" for="piNewPassRepeat">Confirm Password</label>
           <div class="col-md-6">
-            <input id="NewPassRepeat" name="NewPassRepeat" type="password" placeholder="" class="form-control input-md" required="">
+            <input id="NewPassRepeat" name="NewPassRepeat" type="password" data-rule-equalTo="#NewPass" placeholder="" class="form-control input-md" required>
             
           </div>
         </div>
@@ -106,16 +106,12 @@ include("inc/header.php");
 
 </body>
 
+
+
 <script type="text/javascript">
     //---------------------------------------------change password request
     
-//not working
-  $(document).ready(function () {
 
-     $('.submit').click(function(){
-        validateForm();   
-    });
-//not working
   function validateForm(){
 
 
@@ -143,10 +139,9 @@ include("inc/header.php");
             console.log("msg");
         } 
         
-  }
-});   
+  }   
 
-
+  //$('#changePassword-form').validate();
 
   $('#changePassword-form').submit( function (e){
 

@@ -49,9 +49,13 @@ include("inc/header.php");
       $results = $q -> fetchAll(PDO::FETCH_ASSOC);
          
       foreach($results as $row) { ?>
-        <li><a href="#" id=<?=$row['name']?> class="dropdown-item folder"><?=$row['name']?></a></li>
+        <li><a href="#" id=<?=$row['name']?> class="dropdown-item folder"><?=$row['name']?>
+        <?php if ($row['name'] != 'trash' && $row['name'] != 'unfiled') { ?>
+          <span class="glyphicon glyphicon-trash delfolder pull-right" id=<?=$row['name']?>></span>
+        <?php } ?>
+        </a></li>
        <?php } ?>
-       <div class="input-group date">
+       <div class="input-group">
             <input type="text" class="form-control" id="newfolder" name="newfolder" placeholder="New Folder?">
             <span class="input-group-addon addfolder"><span class="glyphicon glyphicon-plus addfolder"></span></span>
           </div>
@@ -71,10 +75,7 @@ include("inc/header.php");
       foreach($results as $row) { ?>
         <li><a href="#" id=<?=$row['name']?> class="dropdown-item pickfolder"><?=$row['name']?></a></li>
        <?php } ?>
-          <div class="input-group date">
-            <input type="text" class="form-control" id="newfolder" name="newfolder" placeholder="New Folder?">
-            <span class="input-group-addon addfolder"><span class="glyphicon glyphicon-plus addfolder"></span></span>
-          </div> 
+          
         </div>
       </div>
     </div>
@@ -306,7 +307,37 @@ $('.pickfolder').click( function (e) {
         console.log(idArray);
         console.log(msg);
         if(msg == 'true') {
-          alert('inserted!')
+          //alert('inserted!')
+          window.location.href = "index.php";
+        } else if(msg == 'false') {
+          alert('SomeThing went wrong, Please try again!');
+        }
+      });
+
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+  });
+
+// to delete a folder
+$('.delfolder').click( function (e) {
+
+      e.preventDefault(); 
+
+        var delfolder = $(this).attr('id');
+
+      var request = $.ajax({
+        url: "ajax/attemptDelFolder.php",
+        method: "POST",
+        data: {delfolder : delfolder},
+        dataType: "html"
+      });
+       
+      request.done(function( msg ) {
+        console.log(delfolder);
+        console.log(msg);
+        if(msg == 'true') {
+          alert('deleted!')
           window.location.href = "index.php";
         } else if(msg == 'false') {
           alert('SomeThing went wrong, Please try again!');

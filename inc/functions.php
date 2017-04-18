@@ -58,7 +58,21 @@ function newfolder($folder) {
 
 }
 
-function attemptaddRefToFolder($pickfolder, $idarray) {
+function delFolder($delfolder) {
+	session_start();
+	global $db;
+	$delete = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name=?");
+	$delete -> bindParam(1, $_SESSION['user_id']);
+	$delete -> bindParam(2, $delfolder);
+	$delete -> execute();
+
+	if($delete) {
+		return true;
+	}
+
+}
+
+function addRefToFolder($pickfolder, $idarray) {
 	session_start();
 	global $db;
 	foreach ($idarray as &$idref) {

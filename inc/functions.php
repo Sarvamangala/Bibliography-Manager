@@ -81,9 +81,33 @@ function addRefToFolder($pickfolder, $idarray) {
 	$insert -> bindParam(2, $pickfolder);
 	$insert -> bindParam(3, $idref);
 	$insert -> execute();
-
+	if ($pickfolder == 'trash') {
+		$deleteFromOther = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name != 'trash' AND ref_id=?");
+		$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
+		$deleteFromOther -> bindParam(2, $idref);
+		$deleteFromOther -> execute();
+	}
 	}
 	if($insert) {
+		return true;
+	}
+
+}
+
+function delRef($delRef) {
+	session_start();
+	global $db;
+	$inserttrash = $db -> prepare("INSERT INTO folders (user_id, name, ref_id) VALUES (?, 'trash', ?)");
+	$inserttrash -> bindParam(1, $_SESSION['user_id']);
+	$inserttrash -> bindParam(2, $delRef);
+	$inserttrash -> execute();
+	$deleteFromOther = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name != 'trash' AND ref_id=?");
+	$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
+	$deleteFromOther -> bindParam(2, $delRef);
+	$deleteFromOther -> execute();
+
+	
+	if($inserttrash && $deleteFromOther) {
 		return true;
 	}
 

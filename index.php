@@ -63,7 +63,7 @@ include("inc/header.php");
       </div>
 
       <div class="btn-group">
-        <button id="folders" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-labelledby="dropdownMenuButton">Move To:
+        <button id="folders" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-labelledby="dropdownMenuButton">Move To
         <span class="caret"></span>
          </button>
         <div class="dropdown-menu">
@@ -125,6 +125,7 @@ include("inc/header.php");
         <td><?=$row['volume']?></td>
         <td><?=$row['abstract']?></td>
         <td><?=$row['pages']?></td>
+        <td><span class="glyphicon glyphicon-trash delref pull-right" id=<?=$row['id']?>></span></td>
      </tr>
        <?php } ?>
        </form>
@@ -272,7 +273,7 @@ $('#popup').submit( function (e){
       request.done(function( msg ) {
         console.log(msg);
         if(msg == 'true') {
-          alert('Your Journal Details has been added successfully')
+          //alert('Your Journal Details has been added successfully')
           window.location.href = "index.php";
         } else if(msg == 'false') {
           alert('SomeThing went wrong, Please try again!');
@@ -319,6 +320,35 @@ $('.pickfolder').click( function (e) {
       });
   });
 
+$('.delref').click( function (e) {
+
+      e.preventDefault(); 
+
+        var delref = $(this).attr('id');
+
+      var request = $.ajax({
+        url: "ajax/attemptDelRef.php?",
+        method: "POST",
+        data: {delref : delref},
+        dataType: "html"
+      });
+       
+      request.done(function( msg ) {
+        console.log(delref);
+        console.log(msg);
+        if(msg == 'true') {
+          alert('Deleted successfully!')
+          window.location.href = "index.php";
+        } else if(msg == 'false') {
+          alert('SomeThing went wrong, Please try again!');
+        }
+      });
+
+      request.fail(function( jqXHR, textStatus ) {
+        alert( "Request failed: " + textStatus );
+      });
+  });
+
 // to delete a folder
 $('.delfolder').click( function (e) {
 
@@ -334,10 +364,10 @@ $('.delfolder').click( function (e) {
       });
        
       request.done(function( msg ) {
-        console.log(delfolder);
-        console.log(msg);
+        //console.log(delfolder);
+        //console.log(msg);
         if(msg == 'true') {
-          alert('deleted!')
+          //alert('deleted!')
           window.location.href = "index.php";
         } else if(msg == 'false') {
           alert('SomeThing went wrong, Please try again!');

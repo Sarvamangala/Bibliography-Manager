@@ -2,7 +2,12 @@
     padding-top: 90px;
 }
 tr {
-  color: red;
+  color: grey;
+}
+
+.delfolder:hover, .delref:hover{
+    color:red ;
+    //other styles
 }
 
 /*!

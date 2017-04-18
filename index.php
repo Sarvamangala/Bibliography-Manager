@@ -72,9 +72,9 @@ include("inc/header.php");
       $q -> bindParam(1, $_SESSION['user_id']);
       $q -> execute();
       $results = $q -> fetchAll(PDO::FETCH_ASSOC);   
-      foreach($results as $row) { ?>
+      foreach($results as $row) { if($_GET['folder'] != $row['name']){ ?>
         <li><a href="#" id=<?=$row['name']?> class="dropdown-item pickfolder"><?=$row['name']?></a></li>
-       <?php } ?>
+       <?php } } ?>
           
         </div>
       </div>
@@ -125,7 +125,9 @@ include("inc/header.php");
         <td><?=$row['volume']?></td>
         <td><?=$row['abstract']?></td>
         <td><?=$row['pages']?></td>
+        <?php if($_GET['folder'] != 'trash'){ ?>
         <td><span class="glyphicon glyphicon-trash delref pull-right" id=<?=$row['id']?>></span></td>
+        <?php } ?>
      </tr>
        <?php } ?>
        </form>

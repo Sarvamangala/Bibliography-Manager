@@ -87,6 +87,12 @@ function addRefToFolder($pickfolder, $idarray) {
 		$deleteFromOther -> bindParam(2, $idref);
 		$deleteFromOther -> execute();
 	}
+	if ($pickfolder != 'trash'){
+		$deleteFromOther = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name = 'trash' AND ref_id=?");
+		$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
+		$deleteFromOther -> bindParam(2, $idref);
+		$deleteFromOther -> execute();
+	}
 	}
 	if($insert) {
 		return true;
@@ -123,7 +129,7 @@ function changePassword($current_password, $new_password) {
 	$q -> execute();
 	$result = $q -> fetch(PDO::FETCH_ASSOC);
 	//alert('here');
-	echo $result['Password']." ";
+	//echo $result['Password']." ";
 	$thisHash =  hash('md5', $current_password);
 	echo $thisHash;*/
 	/*if(hash('md5', $current_password), $result['Password']) {

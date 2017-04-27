@@ -106,46 +106,22 @@ include("inc/header.php");
 
 </body>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.js" crossorigin="anonymous"></script>
 
 
 <script type="text/javascript">
     //---------------------------------------------change password request
     
 
-  function validateForm(){
-
-
-    var currpassword = $('#CurrPass').val();
-    var newpassword = $('#NewPass').val();
-    var renewpassword = $('#NewPassRepeat').val();
     
 
-    var inputVal = new Array(currpassword, newpassword, renewpassword);
-
-    var inputMessage = new Array("name", "company", "email address", "telephone number", "message");
-
-     
-
-        if(inputVal[0] == ""){
-            $('#nameLabel').after('<span class="error"> Please enter your ' + inputMessage[0] + '</span>');
-        } 
-       
-                if(inputVal[1] == ""){
-            $('#companyLabel').after('<span class="error"> Please enter your ' + inputMessage[1] + '</span>');
-        }
-
-        if(inputVal[2] != inputVal[1]){
-            $('#emailLabel').after('<span class="error"> Please enter your ' + inputMessage[2] + '</span>');
-            console.log("msg");
-        } 
-        
-  }   
-
-  //$('#changePassword-form').validate();
+  $('#changePassword-form').validate();
 
   $('#changePassword-form').submit( function (e){
-
-      e.preventDefault();       
+    e.preventDefault();
+    if($(this).valid() == true)  {
+             
         $info = $(this).serializeArray();
 
       var request = $.ajax({
@@ -168,7 +144,9 @@ include("inc/header.php");
       request.fail(function( jqXHR, textStatus ) {
         alert( "Request failed: " + textStatus );
       });
-
+      } else {
+    alert("fail");
+   }
    });
 
       $('.useracc').click( function (e) {

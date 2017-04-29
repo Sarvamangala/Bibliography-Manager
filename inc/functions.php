@@ -100,6 +100,33 @@ function addRefToFolder($pickfolder, $idarray) {
 
 }
 
+function attemptDelRefAsABunch($idarray) {
+	session_start();
+	global $db;
+	foreach ($idarray as &$idref) {
+		$deleteFromFolder = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name = 'trash' AND ref_id=?");
+		$deleteFromFolder -> bindParam(1, $_SESSION['user_id']);
+		$deleteFromFolder -> bindParam(2, $idref);
+		$deleteFromFolder -> execute();
+
+		$deleteFromRef = $db -> prepare("DELETE FROM refs WHERE user_id=? AND id=?");
+		$deleteFromRef -> bindParam(1, $_SESSION['user_id']);
+		$deleteFromRef -> bindParam(2, $idref);
+		$deleteFromRef -> execute();
+	}
+	
+	$countfolder = $deleteFromFolder->rowCount();
+	$countref = $deleteFromRef->rowCount();
+
+	if($countfolder ==0 || $countref ==0){
+    return false;
+	}
+	else{
+    return true;
+	}
+
+}
+
 function delRef($delRef) {
 	session_start();
 	global $db;
@@ -115,6 +142,31 @@ function delRef($delRef) {
 	
 	if($inserttrash && $deleteFromOther) {
 		return true;
+	}
+
+}
+
+function delPermanentRef($delRef) {
+	session_start();
+	global $db;
+	$deleteFromFolder = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name = 'trash' AND ref_id=?");
+	$deleteFromFolder -> bindParam(1, $_SESSION['user_id']);
+	$deleteFromFolder -> bindParam(2, $delRef);
+	$deleteFromFolder -> execute();
+
+	$deleteFromRef = $db -> prepare("DELETE FROM refs WHERE user_id=? AND id=?");
+	$deleteFromRef -> bindParam(1, $_SESSION['user_id']);
+	$deleteFromRef -> bindParam(2, $delRef);
+	$deleteFromRef -> execute();
+
+	$countfolder = $deleteFromFolder->rowCount();
+	$countref = $deleteFromRef->rowCount();
+
+	if($countfolder ==0 || $countref ==0){
+    return false;
+	}
+	else{
+    return true;
 	}
 
 }

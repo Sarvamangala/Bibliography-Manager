@@ -74,7 +74,8 @@ include("inc/header.php");
       $results = $q -> fetchAll(PDO::FETCH_ASSOC);   
       foreach($results as $row) { if(isset($_GET['folder']) && $_GET['folder'] != $row['name'] || !isset($_GET['folder'])){ ?>
         <li><a href="#" id=<?=$row['name']?> class="dropdown-item pickfolder"><?=$row['name']?></a></li>
-       <?php } } ?>
+       <?php } } if(isset($_GET['folder']) && $_GET['folder'] == 'trash'){ ?>
+        <li><a href="#" id='PermanentDelete' class="dropdown-item pickfolder">Permanent Delete</a></li> <?php }?>
           
         </div>
       </div>
@@ -125,7 +126,7 @@ include("inc/header.php");
         <td><?=$row['volume']?></td>
         <td><?=$row['abstract']?></td>
         <td><?=$row['pages']?></td>
-        <?php if(isset($_GET['folder']) && $_GET['folder'] != 'trash'){ ?>
+        <?php if(isset($_GET['folder'])){ ?>
         <td><span class="glyphicon glyphicon-trash delref pull-right" id=<?=$row['id']?>></span></td>
         <?php } ?>
      </tr>
@@ -299,8 +300,12 @@ $('.pickfolder').click( function (e) {
         });
 
 
-      var request = $.ajax({
-        url: "ajax/attemptaddRefToFolder.php?pickfolder="+pickfolder,
+        if (pickfolder == 'PermanentDelete') {
+
+            if (confirm('Are you sure you want to trash these refs out of the database')) {
+                
+              var request = $.ajax({
+        url: "ajax/attemptDelRefAsABunch.php?",
         method: "POST",
         data: {checkArray : idArray},
         dataType: "html"
@@ -317,38 +322,113 @@ $('.pickfolder').click( function (e) {
         }
       });
 
-      request.fail(function( jqXHR, textStatus ) {
-        alert( "Request failed: " + textStatus );
+            } else {
+                alert('Not deleted any')
+              window.location.href = "index.php";
+            }
+      } else {
+
+            var request = $.ajax({
+        url: "ajax/attemptaddRefToFolder.php?pickfolder="+pickfolder,
+        method: "POST",
+        data: {checkArray : idArray},
+        dataType: "html"
       });
+       
+      request.done(function( msg ) {
+        console.log(idArray);
+        console.log(msg);
+        if(msg == 'true') {
+          //alert('inserted!')
+          window.location.href = "index.php";
+        } else if(msg == 'false') {
+          alert('SomeThing went wrong, Please try again!');
+        }
+      });
+      
+
+      }
+
+      request.fail(function( jqXHR, textStatus ) {
+          alert( "Request failed: " + textStatus );
+        });
+      
+
+      
   });
 
 $('.delref').click( function (e) {
 
       e.preventDefault(); 
 
-        var delref = $(this).attr('id');
+      var delref = $(this).attr('id');
 
-      var request = $.ajax({
-        url: "ajax/attemptDelRef.php?",
-        method: "POST",
-        data: {delref : delref},
-        dataType: "html"
+      var $_GET = {};
+
+      document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+          function decode(s) {
+              return decodeURIComponent(s.split("+").join(" "));
+          }
+
+          $_GET[decode(arguments[1])] = decode(arguments[2]);
       });
-       
-      request.done(function( msg ) {
-        console.log(delref);
-        console.log(msg);
-        if(msg == 'true') {
-          alert('Deleted successfully!')
-          window.location.href = "index.php";
-        } else if(msg == 'false') {
-          alert('SomeThing went wrong, Please try again!');
-        }
-      });
+
+      
+
+      if ($_GET['folder'] == 'trash') {
+
+            if (confirm('Are you sure you want to trash this ref out of the database')) {
+                
+              var request = $.ajax({
+            url: "ajax/attemptPermanentDelRef.php?",
+            method: "POST",
+            data: {delref : delref},
+            dataType: "html"
+             });
+           
+          request.done(function( msg ) {
+            console.log(delref);
+            console.log(msg);
+            if(msg == 'true') {
+              alert('Deleted successfully!')
+              window.location.href = "index.php";
+            } else if(msg == 'false') {
+              alert('SomeThing went wrong, Please try again!');
+            }
+            });
+
+            } else {
+                alert('Not deleted any')
+              window.location.href = "index.php";
+            }
+      } else {
+
+            var request = $.ajax({
+            url: "ajax/attemptDelRef.php?",
+            method: "POST",
+            data: {delref : delref},
+            dataType: "html"
+          });
+           
+          request.done(function( msg ) {
+            console.log(delref);
+            console.log(msg);
+            if(msg == 'true') {
+              alert('Deleted successfully!')
+              window.location.href = "index.php";
+            } else if(msg == 'false') {
+              alert('SomeThing went wrong, Please try again!');
+            }
+          });
+
+      
+
+      }
 
       request.fail(function( jqXHR, textStatus ) {
-        alert( "Request failed: " + textStatus );
-      });
+          alert( "Request failed: " + textStatus );
+        });
+      
   });
 
 // to delete a folder

@@ -86,12 +86,21 @@ function addRefToFolder($pickfolder, $idarray) {
 		$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
 		$deleteFromOther -> bindParam(2, $idref);
 		$deleteFromOther -> execute();
+		$updateInRef = $db -> prepare("UPDATE `refs` SET `trash`= 1 WHERE user_id=? AND id=?");
+		$updateInRef -> bindParam(1, $_SESSION['user_id']);
+		$updateInRef -> bindParam(2, $idref);
+		$updateInRef -> execute();
+
 	}
 	if ($pickfolder != 'trash'){
 		$deleteFromOther = $db -> prepare("DELETE FROM folders WHERE user_id=? AND name = 'trash' AND ref_id=?");
 		$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
 		$deleteFromOther -> bindParam(2, $idref);
 		$deleteFromOther -> execute();
+		$updateInRef = $db -> prepare("UPDATE `refs` SET `trash`= 0 WHERE user_id=? AND id=?");
+		$updateInRef -> bindParam(1, $_SESSION['user_id']);
+		$updateInRef -> bindParam(2, $idref);
+		$updateInRef -> execute();
 	}
 	}
 	if($insert) {
@@ -138,6 +147,10 @@ function delRef($delRef) {
 	$deleteFromOther -> bindParam(1, $_SESSION['user_id']);
 	$deleteFromOther -> bindParam(2, $delRef);
 	$deleteFromOther -> execute();
+	$updateInRef = $db -> prepare("UPDATE `refs` SET `trash`= 1 WHERE user_id=? AND id=?");
+		$updateInRef -> bindParam(1, $_SESSION['user_id']);
+		$updateInRef -> bindParam(2, $delRef);
+		$updateInRef -> execute();
 
 	
 	if($inserttrash && $deleteFromOther) {

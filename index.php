@@ -111,7 +111,7 @@ include("inc/header.php");
         $results = $q -> fetchAll(PDO::FETCH_ASSOC);
          } else {
 
-        $q = $db -> prepare("SELECT r.* FROM refs r WHERE r.user_id = ?");
+        $q = $db -> prepare("SELECT r.* FROM refs r WHERE r.user_id = ? AND r.trash = 0");
         $q -> bindParam(1, $_SESSION['user_id']);
         $q -> execute();
         $results = $q -> fetchAll(PDO::FETCH_ASSOC);
@@ -126,7 +126,7 @@ include("inc/header.php");
         <td><?=$row['volume']?></td>
         <td><?=$row['abstract']?></td>
         <td><?=$row['pages']?></td>
-        <?php if(isset($_GET['folder'])){ ?>
+        <?php if(true){ ?>
         <td><span class="glyphicon glyphicon-trash delref pull-right" id=<?=$row['id']?>></span></td>
         <?php } ?>
      </tr>

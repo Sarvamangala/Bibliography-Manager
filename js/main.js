@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
     $('.useracc').click( function (e) {
         e.preventDefault();
         var opt = $(this).attr('id');
@@ -139,4 +139,3 @@
       });
       });
     
-</script>
